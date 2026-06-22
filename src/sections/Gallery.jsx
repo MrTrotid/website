@@ -46,17 +46,16 @@ const GalleryDialog = ({
         </DialogHeader>
         <div className="relative">
           {/* Active Image */}
-          <div className="relative aspect-video mb-4 overflow-hidden">
+          <div className="relative aspect-video mb-4 rounded-lg">
             <Image
-              key={selectedImageIndex}
               src={selectedItem.images[selectedImageIndex]}
               alt={`${selectedItem.title} - Image ${selectedImageIndex + 1}`}
-              className="object-cover w-full h-full rounded-lg animate-fade-in"
+              className="object-cover w-full h-full rounded-lg"
             />
             <Button
               variant="outline"
               size="icon"
-              className="absolute left-2 top-1/2 -translate-y-1/2 focus:ring-offset-0"
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10"
               onClick={() => navigateImage("left")}
             >
               <ChevronLeft className="h-4 w-4" />
@@ -64,7 +63,7 @@ const GalleryDialog = ({
             <Button
               variant="outline"
               size="icon"
-              className="absolute right-2 top-1/2 -translate-y-1/2 focus:ring-offset-0"
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10"
               onClick={() => navigateImage("right")}
             >
               <ChevronRight className="h-4 w-4" />
@@ -105,9 +104,14 @@ const Gallery = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const handleScroll = (direction) => {
-    const container = document.querySelector(".gallery-scroll");
+    const containers = document.querySelectorAll(".gallery-scroll");
     const scrollAmount = direction === "left" ? -400 : 400;
-    container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    containers.forEach((container) => {
+      const style = window.getComputedStyle(container);
+      if (style.display !== "none" && style.visibility !== "hidden") {
+        container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      }
+    });
   };
 
   const filteredItems = galleryItems.filter((item) =>
